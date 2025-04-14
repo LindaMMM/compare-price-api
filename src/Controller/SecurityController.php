@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 final class SecurityController extends AbstractController
 {
-    #[Route('/auth', name: 'auth', methods: ['POST'])]
+    /*#[Route('/auth', name: 'auth', methods: ['POST'])]
     public function login(#[CurrentUser] ?User $user): Response
     {
         if (null === $user) {
@@ -23,7 +23,7 @@ final class SecurityController extends AbstractController
             'username' => $user->getUserIdentifier(),
             'roles' => $user->getRoles()
         ]);
-    }
+    }*/
 
     /*  #[Route('/api/mename', name: 'app_me', methods: ['GET'])]
     public function me()
