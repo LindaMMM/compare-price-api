@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use App\Controller\MeController;
 
 #[ApiResource(
     operations: [
@@ -30,6 +30,13 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Put(processor: UserPasswordHasher::class),
         new Patch(processor: UserPasswordHasher::class),
         new Delete(),
+        new Get(
+            name: 'me',
+            uriTemplate: '/me',
+            controller: MeController::class,
+            read: false,
+            paginationEnabled: false
+        ),
     ],
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
@@ -39,14 +46,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * User roles
-     */
-    const ROLES =  [
-        'Admin' => "ROLE_ADMIN",
-        'User' => 'ROLE_USER',
-        'Robot' => 'ROLE_ROBOT'
-    ];
 
     #[Groups(['user:read'])]
     #[ORM\Id]
@@ -104,7 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->id;
     }
 
     /**
