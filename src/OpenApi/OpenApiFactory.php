@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class OpenApiFactory implements OpenApiFactoryInterface
 {
+    # private string $checkPath = "/api/token/refresh";
+    # private string $checkPath = "/api/token/invalidate";
     private string $checkPath = "/api/login";
     private string $usernamePath = "email";
     private string $passwordPath = "password";

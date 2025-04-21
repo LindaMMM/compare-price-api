@@ -8,6 +8,6 @@ api_platform:
             vary: ['Content-Type', 'Authorization', 'Origin']
     swagger:
         api_keys:
-            JWT:
+            apiKey:
                 name: Authorization
                 type: header

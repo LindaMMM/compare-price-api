@@ -1,2 +1,5 @@
 gesdinet_jwt_refresh_token:
     refresh_token_class: App\Entity\RefreshToken # This is the class name of the refresh token, you will need to adjust this to match the class your application will use
+    ttl_update: true
+    user_identity_field: email
+    user_provider: security.user.provider.concerte.app_userr_provider
