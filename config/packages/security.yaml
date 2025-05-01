@@ -6,34 +6,48 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        users:
             entity:
                 class: App\Entity\User
                 property: email
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
-
-        api:
-            pattern: ^/api
+        login:
+            pattern: ^/auth/login
             stateless: true
-            entry_point: jwt
-            jwt: ~
-            refresh_jwt:
-                check_path: jwt_refresh # or, you may use the `api_refresh_token` route name
-                # or if you have more than one user provider
-                provider: app_user_provider
-            
-        main:
             json_login:
-                check_path: jwt_auth # The name in routes.yaml is enough for mapping
+                check_path: jwt_auth
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-       
+   
+        
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            entry_point: jwt
+            provider: users
+            jwt: ~
+            refresh_jwt:
+                check_path: /auth/token/refresh
+            logout:
+                path: jwt_invalidate
+            
+            
+        main:
+            stateless: true
+            provider: users
+            entry_point: jwt
+            jwt: ~
+            refresh_jwt:
+                check_path: /auth/token/refresh
+            logout:
+                path: jwt_invalidate
+
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -45,10 +59,12 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/auth/(login|token/refresh), roles: PUBLIC_ACCESS }
+        - { path: ^/auth/token/invalidate, roles: IS_AUTHENTICATED}
         - { path: ^/api/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/api/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
         - { path: ^/api/contexts, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI contexts
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED }
+        - { path: ^/test_api/lucky, roles: IS_AUTHENTICATED  }
         # - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         # -{ path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
