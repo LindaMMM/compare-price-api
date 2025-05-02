@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\RefreshToken;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -69,7 +70,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('query', $usernameOrEmail)
             ->getOneOrNullResult();
     }
-
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */
