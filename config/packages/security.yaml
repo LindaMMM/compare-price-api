@@ -2,7 +2,8 @@ security:
     
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        # Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\User: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -21,11 +22,6 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
    
-        
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
         api:
             pattern:   ^/api
             stateless: true
@@ -36,7 +32,11 @@ security:
                 check_path: /auth/token/refresh
             logout:
                 path: jwt_invalidate
-            
+        
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
             
         main:
             stateless: true
@@ -47,6 +47,7 @@ security:
                 check_path: /auth/token/refresh
             logout:
                 path: jwt_invalidate
+
 
 
             # activate different ways to authenticate
@@ -63,8 +64,7 @@ security:
         - { path: ^/api/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/api/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
         - { path: ^/api/contexts, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI contexts
-        - { path: ^/api, roles: IS_AUTHENTICATED }
-        - { path: ^/test_api/lucky, roles: IS_AUTHENTICATED  }
+        - { path: ^/api/, roles: IS_AUTHENTICATED }
         # - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         # -{ path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

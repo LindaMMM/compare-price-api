@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\User;
+use App\Repository\UserRepository;
+use App\Services\UserService;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,44 +17,20 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 //...
 final class SecurityController extends AbstractController
 {
-    #[Route('/auth/token/invalidate', name: 'auth', methods: ['POST'])]
-    public function logout(Request $request, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage)
+    private $user_service;
+    public function __construct(UserService $user_service)
     {
+        $this->user_service = $user_service;
+    }
+    #[Route('/auth/token/invalidate', name: 'auth', methods: ['POST'])]
+    public function logout(
+        Request $request,
+        EventDispatcherInterface $eventDispatcher,
+        TokenStorageInterface $tokenStorage
+    ) {
+        $this->user_service->cleartoken($tokenStorage->getToken()->getUser());
         $eventDispatcher->dispatch(new LogoutEvent($request, $tokenStorage->getToken()));
 
         return new JsonResponse();
     }
-
-    /*#[Route('/auth', name: 'auth', methods: ['POST'])]
-    public function login(#[CurrentUser] ?User $user): Response
-    {
-        if (null === $user) {
-            return $this->json([
-                'message' => 'missing credentials',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
-        return $this->json([
-            'username' => $user->getUserIdentifier(),
-            'roles' => $user->getRoles()
-        ]);
-    }*/
-
-    /*  #[Route('/api/mename', name: 'app_me', methods: ['GET'])]
-    public function me()
-    {
-
-        return $this->json([
-            'me' => "hello"
-        ]);
-    }
-
-    #[Route('/api/mename', name: 'app_me', methods: ['GET'])]
-    public function me()
-    {
-
-        return $this->json([
-            'me' => "hello"
-        ]);
-    }*/
 }
