@@ -7,3 +7,5 @@ lexik_jwt_authentication:
     blocklist_token:
         enabled: true
         cache: cache.app
+    api_platform:
+        enabled: false
