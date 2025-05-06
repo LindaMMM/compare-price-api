@@ -1,11 +1,11 @@
 api_platform:
     # Set this to false if you want Webby to disappear.
     show_webby: false
-      # The title of the API.
+    # The title of the API.
     title: Compare price API
     # The description of the API.
     description: 'Cette api permet la gestion des produits et leurs évolution des prix'
-     # The version of the API.
+    # The version of the API.
     version: 1.0.0
     defaults:
         stateless: true

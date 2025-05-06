@@ -14,37 +14,26 @@ class OpenApiFactory implements OpenApiFactoryInterface
 {
     # private string $checkPath = "/api/token/refresh";
     # private string $checkPath = "/api/token/invalidate";
-    private string $checkPath = "/api/login";
+    private string $checkPath = "/auth/login";
     private string $usernamePath = "email";
     private string $passwordPath = "password";
 
     public function __construct(private OpenApiFactoryInterface $decorated) {}
 
-    /* public function __invoke(array $context = []): OpenApi
-    {
-        $openApi = $this->decorated->__invoke($context);
-        foreach ($openApi->getPaths()->getPaths() as $key => $path) {
-            if ($path->getGet() && $path->getGet()->getSummary() == 'hidden') {
-                $openApi->getPaths()->addPath($key, $path->withGet(null));
-            }
-        }
-        return $openApi;
-    }*/
-
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = ($this->decorated)($context);
-        /* $openApi
+        $openApi
             ->getComponents()->getSecuritySchemes()->offsetSet(
                 'JWT',
                 new \ArrayObject(
                     [
-                        'type' => 'http',
+                        'type' => 'https',
                         'scheme' => 'bearer',
-                        'bearerFormat' => 'JWT',
+                        'bearerFormat' => 'Token jwt',
                     ]
                 )
-            );*/
+            );
         $openApi
             ->getPaths()
             ->addPath($this->checkPath, (new PathItem())->withPost(

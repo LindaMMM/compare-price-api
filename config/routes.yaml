@@ -10,6 +10,9 @@ jwt_auth:
 jwt_refresh:
     path: /auth/token/refresh
     
-    
 jwt_invalidate:
     path: /auth/token/invalidate
+
+api_doc:
+  path: /api_documentation
+  controller: api_platform.action.documentation

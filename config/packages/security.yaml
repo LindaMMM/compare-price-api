@@ -61,7 +61,7 @@ security:
     access_control:
         - { path: ^/auth/(login|token/refresh), roles: PUBLIC_ACCESS }
         - { path: ^/auth/token/invalidate, roles: IS_AUTHENTICATED}
-        - { path: ^/api/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+        - { path: ^/api_document/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/api/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
         - { path: ^/api/contexts, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI contexts
         - { path: ^/api/, roles: IS_AUTHENTICATED }
