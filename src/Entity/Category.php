@@ -15,33 +15,27 @@ use ApiPlatform\Metadata\Post;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
-    operations: [
-        new Get(
-            controller: NotFoundAction::class,
-            read: false,
-            output: false,
-            openapi: false,
-        ),
-        new Post(),
-        new GetCollection()
-    ]
+    normalizationContext: ['groups' => ['read:Category', 'read:Categories']],
+    denormalizationContext: ['groups' => ['write:Category']],
+    paginationMaximumItemsPerPage: 20,
+    paginationEnabled: true
 )]
-class Category
+class Category extends Audit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Product', 'write:Product'])]
+    #[Groups(['read:Product', 'write:Product', 'read:Category', 'write:Category'])]
     private ?int $id = null;
 
-    #[Groups(['read:Product', 'write:Product'])]
+    #[Groups(['read:Product', 'write:Product', 'read:Category', 'write:Category', 'read:Categoryies'])]
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private ?string $name = null;
 
     /**
      * @var Collection<int, Product>
      */
-    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'Category')]
+    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'category')]
     private Collection $products;
 
     /**
@@ -68,14 +62,14 @@ class Category
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): static
+    public function setName(string $name): static
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
@@ -100,7 +94,7 @@ class Category
 
     public function removeProduct(Product $Product): static
     {
-        if ($this->Products->removeElement($Product)) {
+        if ($this->products->removeElement($Product)) {
             // set the owning side to null (unless already changed)
             if ($Product->getCategory() === $this) {
                 $Product->setCategory(null);

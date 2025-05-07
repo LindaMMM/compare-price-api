@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 #[ApiResource]
-class Task
+class Task extends Audit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

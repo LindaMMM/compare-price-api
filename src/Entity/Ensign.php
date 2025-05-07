@@ -5,11 +5,11 @@ namespace App\Entity;
 use App\Repository\EnsignRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EnsignRepository::class)]
-class Ensign
+class Ensign extends Audit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -28,20 +28,6 @@ class Ensign
     #[ORM\OneToMany(targetEntity: Rule::class, mappedBy: 'ensign')]
     private Collection $rules;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateinput = null;
-
-    #[ORM\Column]
-    private ?float $price = null;
-
-    #[ORM\Column]
-    private ?int $stock = null;
-
-    #[ORM\Column]
-    private ?bool $valid = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $label = null;
 
     public function __construct()
     {
@@ -103,66 +89,6 @@ class Ensign
                 $rule->setEnsign(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getDateinput(): ?\DateTimeInterface
-    {
-        return $this->dateinput;
-    }
-
-    public function setDateinput(\DateTimeInterface $dateinput): static
-    {
-        $this->dateinput = $dateinput;
-
-        return $this;
-    }
-
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(float $price): static
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    public function getStock(): ?int
-    {
-        return $this->stock;
-    }
-
-    public function setStock(int $stock): static
-    {
-        $this->stock = $stock;
-
-        return $this;
-    }
-
-    public function isValid(): ?bool
-    {
-        return $this->valid;
-    }
-
-    public function setValid(bool $valid): static
-    {
-        $this->valid = $valid;
-
-        return $this;
-    }
-
-    public function getLabel(): ?string
-    {
-        return $this->label;
-    }
-
-    public function setLabel(string $label): static
-    {
-        $this->label = $label;
 
         return $this;
     }
