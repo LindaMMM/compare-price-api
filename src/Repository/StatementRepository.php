@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Bank;
+use App\Entity\Statement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Bank>
+ * @extends ServiceEntityRepository<Statement>
  */
-class BankRepository extends ServiceEntityRepository
+class StatementRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Bank::class);
+        parent::__construct($registry, Statement::class);
     }
 
     //    /**
-    //     * @return Bank[] Returns an array of Bank objects
+    //     * @return Statement[] Returns an array of Bank objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class BankRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Bank
+    //    public function findOneBySomeField($value): ?Statement
     //    {
     //        return $this->createQueryBuilder('b')
     //            ->andWhere('b.exampleField = :val')

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RuleRepository::class)]
 #[ApiResource]
-class Rule
+class Rule extends Audit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

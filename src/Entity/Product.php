@@ -25,7 +25,7 @@ use ApiPlatform\Metadata\ApiFilter;
     paginationEnabled: true
 )]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'nom' => 'partial'])]
-class Product
+class Product extends Audit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -36,53 +36,47 @@ class Product
 
     #[ORM\Column(length: 255)]
     #[Groups(['read:Product', 'read:Products', 'write:Product'])]
-    private ?string $nom = null;
+    private ?string $name = null;
+
+
+    /**
+     * @var list<string> The word search
+     */
+    #[Groups(['read:Product', 'write:Product'])]
+    #[ORM\Column(type: 'json')]
+    private array $search = [];
 
 
     #[ORM\Column(length: 255)]
     #[Groups(['read:Product', 'write:Product'])]
-    private ?string $slug = null;
-
+    private ?string $ref_product = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['read:Product', 'write:Product'])]
-    private ?string $ref_marque = null;
-
-
-    #[ORM\Column]
-    #[Groups(['read:Product'])]
-    private ?\DateTimeImmutable $createAt = null;
-
-
-    #[ORM\Column]
-    #[Groups(['read:Product'])]
-    private ?\DateTimeImmutable $updateAt = null;
-
+    private ?string $media = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['read:Product', 'write:Product'])]
     private ?string $content = null;
 
 
-    #[ORM\ManyToOne(inversedBy: 'Products')]
+    #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['read:Product', 'write:Product'])]
     private ?Category $category = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Product')]
+    #[ORM\ManyToOne(inversedBy: 'product')]
     private ?Brand $brand = null;
 
     /**
-     * @var Collection<int, Bank>
+     * @var Collection<int, Statement>
      */
-    #[ORM\OneToMany(targetEntity: Bank::class, mappedBy: 'Product')]
-    private Collection $banks;
+    #[ORM\OneToMany(targetEntity: Statement::class, mappedBy: 'product')]
+    private Collection $statements;
 
     public function __construct()
     {
-        $this->createAt =  new \DateTimeImmutable();;
-        $this->updateAt =  new \DateTimeImmutable();
-        $this->banks = new ArrayCollection();
+        $this->statements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,62 +84,49 @@ class Product
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): static
+    public function setName(string $name): static
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getSlug(): ?string
+    /**
+     * 
+     *
+     * @return list<string>
+     */
+    public function getSearch(): array
     {
-        return $this->slug;
+        $search = $this->search;
+
+        return array_unique($search);
     }
 
-    public function setSlug(string $slug): static
+    /**
+     * @param list<string> $search
+     */
+    public function setSearchs(array $search): static
     {
-        $this->slug = $slug;
+        $this->search = $search;
 
         return $this;
     }
 
-    public function getRefMarque(): ?string
+
+    public function getRefProduct(): ?string
     {
-        return $this->ref_marque;
+        return $this->ref_product;
     }
 
-    public function setRefMarque(string $ref_marque): static
+    public function setRefProduct(string $ref_product): static
     {
-        $this->ref_marque = $ref_marque;
-
-        return $this;
-    }
-
-    public function getCreateAt(): ?\DateTimeImmutable
-    {
-        return $this->createAt;
-    }
-
-    public function setCreateA(\DateTimeImmutable $creele): static
-    {
-        $this->createAt = $creele;
-
-        return $this;
-    }
-
-    public function getUpdateAt(): ?\DateTimeImmutable
-    {
-        return $this->updateAt;
-    }
-
-    public function setUpdateAt(\DateTimeImmutable $updateAt): static
-    {
-        $this->updateAt = $updateAt;
+        $this->ref_product = $ref_product;
 
         return $this;
     }
@@ -162,12 +143,24 @@ class Product
         return $this;
     }
 
+    public function getMedia(): ?string
+    {
+        return $this->media;
+    }
+
+    public function setMedia(?string $media): static
+    {
+        $this->media = $media;
+
+        return $this;
+    }
+
     public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategorie(?Category $categorie): static
+    public function setCategory(?Category $categorie): static
     {
         $this->category = $categorie;
 
@@ -187,29 +180,29 @@ class Product
     }
 
     /**
-     * @return Collection<int, Bank>
+     * @return Collection<int, Statement>
      */
-    public function getBanks(): Collection
+    public function getstatements(): Collection
     {
-        return $this->banks;
+        return $this->statements;
     }
 
-    public function addBank(Bank $bank): static
+    public function addStatement(Statement $statement): static
     {
-        if (!$this->banks->contains($bank)) {
-            $this->banks->add($bank);
-            $bank->setProduct($this);
+        if (!$this->statements->contains($statement)) {
+            $this->statements->add($statement);
+            $statement->setProduct($this);
         }
 
         return $this;
     }
 
-    public function removeBank(Bank $bank): static
+    public function removeStatement(Statement $statement): static
     {
-        if ($this->banks->removeElement($bank)) {
+        if ($this->statements->removeElement($statement)) {
             // set the owning side to null (unless already changed)
-            if ($bank->getProduct() === $this) {
-                $bank->setProduct(null);
+            if ($statement->getProduct() === $this) {
+                $statement->setProduct(null);
             }
         }
 
