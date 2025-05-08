@@ -7,11 +7,21 @@ use App\Entity\Brand;
 use App\Entity\Category;
 use App\Entity\Ensign;
 use App\Entity\Product;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+
+    private $userPasswordHasherInterface;
+
+    public function __construct(UserPasswordHasherInterface $userPasswordHasherInterface)
+    {
+        $this->userPasswordHasherInterface = $userPasswordHasherInterface;
+    }
+
     public function load(ObjectManager $manager): void
     {
         // ----------Category-------------
@@ -130,6 +140,19 @@ class AppFixtures extends Fixture
         $prod4->setBrand($band1);
 
         $manager->persist($prod4);
+
+        // Users
+        $user_lma_admin = new User();
+        $user_lma_admin->setEmail("lma_admin@me.fr");
+        $user_lma_admin->setRoles(['ROLE_ADMIN']);
+        $user_lma_admin->setPlainPassword('0000');
+        $user_lma_admin->setPassword(
+            $this->userPasswordHasherInterface->hashPassword(
+                $user_lma_admin,
+                "0000"
+            )
+        );
+        $manager->persist($user_lma_admin);
 
 
         $manager->flush();

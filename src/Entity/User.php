@@ -46,6 +46,11 @@ use App\Controller\MeController;
 #[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    public const AVAILABLE_ROLES = [
+        'ROLE_USER',
+        'ROLE_ADMIN',
+        'ROLE_ROBOT',
+    ];
 
     #[Groups(['user:read'])]
     #[ORM\Id]
@@ -64,6 +69,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column(type: 'json')]
+    #[Groups(['user:read', 'admin:write'])]
+    #[ApiProperty(
+        openapiContext: [
+            'type' => 'array',
+            'items' => [
+                'type' => 'string',
+                'enum' => User::AVAILABLE_ROLES,
+            ]
+        ]
+    )]
+    #[Assert\All([
+        new Assert\Choice(
+            choices: User::AVAILABLE_ROLES,
+            message: 'Le rôle "{{ value }}" n\'est pas autorisé. Rôles valides : {{ choices }}.'
+        )
+    ])]
     private array $roles = [];
 
     /**

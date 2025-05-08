@@ -38,7 +38,6 @@ class Product extends Audit
     #[Groups(['read:Product', 'read:Products', 'write:Product'])]
     private ?string $name = null;
 
-
     /**
      * @var list<string> The word search
      */
