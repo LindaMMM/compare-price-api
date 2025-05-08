@@ -65,7 +65,7 @@ class Product extends Audit
     #[Groups(['read:Product', 'write:Product'])]
     private ?Category $category = null;
 
-    #[ORM\ManyToOne(inversedBy: 'product')]
+    #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Brand $brand = null;
 
     /**
