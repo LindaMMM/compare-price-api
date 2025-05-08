@@ -23,7 +23,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = ($this->decorated)($context);
-        $openApi
+        /*$openApi
             ->getComponents()->getSecuritySchemes()->offsetSet(
                 'JWT',
                 new \ArrayObject(
@@ -33,7 +33,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         'bearerFormat' => 'Token jwt',
                     ]
                 )
-            );
+            );*/
         $openApi
             ->getPaths()
             ->addPath($this->checkPath, (new PathItem())->withPost(
