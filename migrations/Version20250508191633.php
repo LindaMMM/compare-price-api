@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250508190450 extends AbstractMigration
+final class Version20250508191633 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -45,10 +45,10 @@ final class Version20250508190450 extends AbstractMigration
             CREATE TABLE apicompare_task_apicompare_category (apicompare_task_id INT NOT NULL, apicompare_category_id INT NOT NULL, INDEX IDX_509F3D0E25D3463 (apicompare_task_id), INDEX IDX_509F3D0B1C05D7D (apicompare_category_id), PRIMARY KEY(apicompare_task_id, apicompare_category_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE TABLE refresh_tokens (id INT AUTO_INCREMENT NOT NULL, refresh_token VARCHAR(128) NOT NULL, username VARCHAR(255) NOT NULL, valid DATETIME NOT NULL, UNIQUE INDEX UNIQ_9BACE7E1C74F2195 (refresh_token), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+            CREATE TABLE apicompare_refresh_tokens (id INT AUTO_INCREMENT NOT NULL, refresh_token VARCHAR(128) NOT NULL, username VARCHAR(255) NOT NULL, valid DATETIME NOT NULL, UNIQUE INDEX UNIQ_A2C2E9D4C74F2195 (refresh_token), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE TABLE `user` (id INT AUTO_INCREMENT NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_8D93D649E7927C74 (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+            CREATE TABLE `apicompare_user` (id INT AUTO_INCREMENT NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_2E5EC08DE7927C74 (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
         $this->addSql(<<<'SQL'
             ALTER TABLE ApiCompare_Product ADD CONSTRAINT FK_A69F8E7A12469DE2 FOREIGN KEY (category_id) REFERENCES ApiCompare_Category (id)
@@ -122,10 +122,10 @@ final class Version20250508190450 extends AbstractMigration
             DROP TABLE apicompare_task_apicompare_category
         SQL);
         $this->addSql(<<<'SQL'
-            DROP TABLE refresh_tokens
+            DROP TABLE apicompare_refresh_tokens
         SQL);
         $this->addSql(<<<'SQL'
-            DROP TABLE `user`
+            DROP TABLE `apicompare_user`
         SQL);
     }
 }

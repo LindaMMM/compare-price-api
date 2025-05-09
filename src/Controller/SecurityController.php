@@ -31,6 +31,6 @@ final class SecurityController extends AbstractController
         $this->user_service->cleartoken($tokenStorage->getToken()->getUser());
         $eventDispatcher->dispatch(new LogoutEvent($request, $tokenStorage->getToken()));
 
-        return new JsonResponse();
+        return $this->json(['message' => 'Logoff Successfully']);
     }
 }

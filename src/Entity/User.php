@@ -42,7 +42,7 @@ use App\Controller\MeController;
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
+#[ORM\Table(name: '`apicompare_user`')]
 #[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

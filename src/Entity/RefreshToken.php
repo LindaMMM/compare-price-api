@@ -10,5 +10,5 @@ use Gesdinet\JWTRefreshTokenBundle\Entity\RefreshToken as BaseRefreshToken;
  * @ORM\Table("refresh_tokens")
  */
 #[ORM\Entity]
-#[ORM\Table(name: 'refresh_tokens')]
+#[ORM\Table(name: 'apicompare_refresh_tokens')]
 class RefreshToken extends BaseRefreshToken {}
