@@ -29,7 +29,7 @@ final class UserService
         /* @noinspection PhpUnhandledExceptionInspection */
         // Possible exception should not be caught, as we need to become aware that something broke here
         $this->databaseConnection->executeStatement(sprintf('
-            DELETE FROM refresh_tokens
+            DELETE FROM apicompare_refresh_tokens
             WHERE username = "%s"
         ', $authenticatedUser->getUserIdentifier()));
     }
