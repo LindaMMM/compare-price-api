@@ -10,10 +10,15 @@ security:
       entity:
         class: App\Entity\User
         property: email
+    jwt:
+      lexik_jwt:
+        class: App\Entity\User
+
   firewalls:
     login:
       pattern: ^/auth/login
       stateless: true
+      provider: users
       json_login:
         check_path: jwt_auth
         username_path: email
@@ -25,7 +30,7 @@ security:
       pattern: ^/api
       stateless: true
       entry_point: jwt
-      provider: users
+      provider: jwt
       jwt: ~
       refresh_jwt:
         check_path: /auth/token/refresh

@@ -1,18 +1,14 @@
 api_platform:
-    # Set this to false if you want Webby to disappear.
-    show_webby: false
-    # The title of the API.
-    title: Compare price API
-    # The description of the API.
-    description: 'Cette api permet la gestion des produits et leurs évolution des prix'
-    # The version of the API.
-    version: 1.0.0
-    defaults:
-        stateless: true
-        cache_headers:
-            vary: ['Content-Type', 'Authorization', 'Origin']
-    swagger:
-        api_keys:
-            JWT:
-                name: Authorization
-                type: header
+  # Set this to false if you want Webby to disappear.
+  show_webby: false
+  # The title of the API.
+  title: Compare price API
+  # The description of the API.
+  description: "Cette api permet la gestion des produits et leurs évolution des prix"
+  # The version of the API.
+  version: 1.0.0
+  use_symfony_listeners: true
+  defaults:
+    stateless: true
+    cache_headers:
+      vary: ["Content-Type", "Authorization", "Origin"]

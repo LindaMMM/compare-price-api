@@ -23,6 +23,12 @@ class OpenApiFactory implements OpenApiFactoryInterface
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = ($this->decorated)($context);
+        $shemas = $openApi->getComponents()->getSecuritySchemes();
+        $shemas['bearerAuth'] = new \ArrayObject([
+            'type' => 'https',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT',
+        ]);
         /*$openApi
             ->getComponents()->getSecuritySchemes()->offsetSet(
                 'JWT',

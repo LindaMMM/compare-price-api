@@ -20,7 +20,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+
 use App\Controller\MeController;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 
 #[ApiResource(
     operations: [
@@ -35,7 +37,8 @@ use App\Controller\MeController;
             uriTemplate: '/me',
             controller: MeController::class,
             read: false,
-            paginationEnabled: false
+            paginationEnabled: false,
+            security: "is_granted('ROLE_USER')"
         ),
     ],
     normalizationContext: ['groups' => ['user:read']],
@@ -44,7 +47,7 @@ use App\Controller\MeController;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`apicompare_user`')]
 #[UniqueEntity('email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     public const AVAILABLE_ROLES = [
         'ROLE_USER',
@@ -105,6 +108,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
+    public function setId(int $id)
+    {
+        $this->id = $id;
+    }
     public function getEmail(): ?string
     {
         return $this->email;
@@ -184,5 +191,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
+    }
+    /**
+     * Creates a new instance from a given JWT payload.
+     *
+     * @param string $username
+     *
+     * @return JWTUserInterface
+     */
+    public static function createFromPayload($username, array $payload)
+    {
+        $user = new User();
+        $user->setEmail($username);
+        $user->setId($payload["id"]);
+        $user->setRoles($payload["roles"]);
+
+        return $user;
     }
 }
