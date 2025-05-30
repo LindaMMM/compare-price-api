@@ -8,6 +8,15 @@ api_platform:
   # The version of the API.
   version: 1.0.0
   use_symfony_listeners: true
+  formats:
+    json: ["application/ld+json"]
+    jsonld: ["application/ld+json"]
+    html: ["text/html"]
+    multipart: ["multipart/form-data"]
+  error_formats:
+    json: ["application/json"]
+    multipart: ["multipart/form-data"]
+
   defaults:
     stateless: true
     cache_headers:

@@ -21,6 +21,7 @@ use ApiPlatform\Metadata\ApiFilter;
 #[ApiResource(
     normalizationContext: ['groups' => ['read:Products', 'read:Product']],
     denormalizationContext: ['groups' => ['write:Product']],
+    forceEager: false,
     paginationMaximumItemsPerPage: 20,
     paginationEnabled: true
 )]
@@ -50,9 +51,9 @@ class Product extends Audit
     #[Groups(['read:Product', 'write:Product'])]
     private ?string $ref_product = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\OneToOne(mappedBy: 'product', cascade: ['persist', 'remove'])]
     #[Groups(['read:Product', 'write:Product'])]
-    private ?string $media = null;
+    private ?MediaObject  $media = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['read:Product', 'write:Product'])]
@@ -142,12 +143,12 @@ class Product extends Audit
         return $this;
     }
 
-    public function getMedia(): ?string
+    public function getMedia(): ?MediaObject
     {
         return $this->media;
     }
 
-    public function setMedia(?string $media): static
+    public function setMedia(?MediaObject $media): static
     {
         $this->media = $media;
 
