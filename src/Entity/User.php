@@ -38,7 +38,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
             controller: MeController::class,
             read: false,
             paginationEnabled: false,
-            security: "is_granted('ROLE_USER')"
+            security: "is_granted('ROLE_USER')",
         ),
     ],
     normalizationContext: ['groups' => ['user:read']],

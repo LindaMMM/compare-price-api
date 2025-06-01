@@ -21,7 +21,6 @@ use App\Controller\MediaObjectController;
 #[ORM\Entity]
 #[ApiResource(
     normalizationContext: ['groups' => ['media:read']],
-    types: ['https://schema.org/MediaObject'],
     operations: [
         new Get(),
         new GetCollection(),
@@ -31,6 +30,7 @@ use App\Controller\MediaObjectController;
             deserialize: false,
             validationContext: ['groups' => ['Default', 'write']],
             openapi: new Model\Operation(
+                security: ['bearerAuth' => []],
                 requestBody: new Model\RequestBody(
                     content: new \ArrayObject([
                         'multipart/form-data' => [
@@ -72,10 +72,6 @@ class MediaObject
     #[Groups(['media:read', 'media:write'])]
     private ?string $title = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups(['media:read', 'media:write'])]
-    private ?Product $product = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -89,18 +85,6 @@ class MediaObject
     public function setName(string $Name): static
     {
         $this->title = $Name;
-
-        return $this;
-    }
-
-    public function getProduct(): ?Product
-    {
-        return $this->product;
-    }
-
-    public function setProduct(?Product $Product): static
-    {
-        $this->product = $Product;
 
         return $this;
     }
