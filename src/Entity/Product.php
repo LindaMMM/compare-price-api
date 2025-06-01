@@ -51,7 +51,8 @@ class Product extends Audit
     #[Groups(['read:Product', 'write:Product'])]
     private ?string $ref_product = null;
 
-    #[ORM\OneToOne(mappedBy: 'product', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: MediaObject::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'media_id', referencedColumnName: 'id')]
     #[Groups(['read:Product', 'write:Product'])]
     private ?MediaObject  $media = null;
 

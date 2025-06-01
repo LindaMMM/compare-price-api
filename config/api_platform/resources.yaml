@@ -1,0 +1,5 @@
+resources:
+  App\Entity\Brand:
+    operations:
+      ApiPlatform\Metadata\GetCollection:
+        openapi: false

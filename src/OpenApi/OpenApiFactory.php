@@ -9,6 +9,8 @@ use ApiPlatform\OpenApi\Model\Operation;
 use ApiPlatform\OpenApi\Model\PathItem;
 use ApiPlatform\OpenApi\Model\RequestBody;
 use Symfony\Component\HttpFoundation\Response;
+use ApiPlatform\OpenApi\Model\SecurityScheme;
+use ApiPlatform\OpenApi\Model\SecurityRequirement;
 
 class OpenApiFactory implements OpenApiFactoryInterface
 {
@@ -22,24 +24,45 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
     public function __invoke(array $context = []): OpenApi
     {
+
+
         $openApi = ($this->decorated)($context);
-        $shemas = $openApi->getComponents()->getSecuritySchemes();
+        // to define base path URL
+        // $openApi = $openApi->withServers([new Model\Server('https://www.api.compare.nitramlinda.fr/api')]);
+        $components = $openApi->getComponents();
+        // string $type = null, private string $description = '', private ?string $name = null, private ?string $in = null, private ?string $scheme = null, private ?string $bearerFormat = null, private ?OAuthFlows $flows = null, private ?string $openIdConnectUrl = null
+        $securityScheme = new SecurityScheme('http', 'description', 'name', null, 'bearer', 'JWT token authentication');
+        $shema_secu = new \ArrayObject(['bearerAuth' => $securityScheme]);
+        $components = $components->withSecuritySchemes($shema_secu);;
+
+        // Appliquer la sécurité globale à toutes les routes
+        $openApi = $openApi->withComponents($components)->withSecurity([
+            ['bearerAuth' => []],
+        ]);
+
+        $paths = $openApi->getPaths();
+
+        foreach ($paths->getPaths() as $path => $pathItem) {
+            foreach (['get', 'post', 'put', 'patch', 'delete'] as $method) {
+                $operation = $pathItem->{'get' . ucfirst($method)}();
+                if ($operation) {
+                    $operation->withSecurity([
+                        ['bearerAuth' => []],
+                    ]);
+                }
+            }
+        }
+        $openApi = $openApi->withComponents($components)->withPaths($paths);
+
+        /* $shemas = $openApi->getComponents()->getSecuritySchemes();
+
+
         $shemas['bearerAuth'] = new \ArrayObject([
-            'type' => 'https',
+            'type' => 'http',
             'scheme' => 'bearer',
             'bearerFormat' => 'JWT',
-        ]);
-        /*$openApi
-            ->getComponents()->getSecuritySchemes()->offsetSet(
-                'JWT',
-                new \ArrayObject(
-                    [
-                        'type' => 'https',
-                        'scheme' => 'bearer',
-                        'bearerFormat' => 'Token jwt',
-                    ]
-                )
-            );*/
+        ]);*/
+        $openApi = $openApi->withSecurity(['BearerAuth' => []]);
         $openApi
             ->getPaths()
             ->addPath($this->checkPath, (new PathItem())->withPost(

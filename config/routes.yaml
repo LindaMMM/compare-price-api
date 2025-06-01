@@ -1,18 +1,14 @@
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
 
 jwt_auth:
   path: /auth/login
 
 jwt_refresh:
-    path: /auth/token/refresh
-    
-jwt_invalidate:
-    path: /auth/token/invalidate
+  path: /auth/token/refresh
 
-api_doc:
-  path: /api_documentation
-  controller: api_platform.action.documentation
+jwt_invalidate:
+  path: /auth/token/invalidate
