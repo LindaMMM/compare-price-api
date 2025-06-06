@@ -25,6 +25,7 @@ use App\Controller\MeController;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 
 #[ApiResource(
+    security: 'is_granted("ROLE_USER")',
     operations: [
         new GetCollection(),
         new Post(processor: UserPasswordHasher::class, validationContext: ['groups' => ['Default', 'user:create']]),

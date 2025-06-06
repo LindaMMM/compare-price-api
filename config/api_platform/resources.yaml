@@ -1,5 +1,3 @@
 resources:
-  App\Entity\Brand:
-    operations:
-      ApiPlatform\Metadata\GetCollection:
-        openapi: false
+  App\Entity\Product: ~
+  App\Entity\Brand: ~
