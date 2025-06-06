@@ -30,7 +30,7 @@ use App\Controller\MediaObjectController;
             deserialize: false,
             validationContext: ['groups' => ['Default', 'write']],
             openapi: new Model\Operation(
-                security: ['bearerAuth' => []],
+                security: ['JWT' => []],
                 requestBody: new Model\RequestBody(
                     content: new \ArrayObject([
                         'multipart/form-data' => [
