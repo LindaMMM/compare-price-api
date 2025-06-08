@@ -8,19 +8,18 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
-final class StatementVoter extends Voter
+final class EnsignVoter extends Voter
 {
-    public const EDIT = 'STATEMENT_EDIT';
-    public const VIEW = 'STATEMENT_VIEW';
-    public const DELETE = 'STATEMENT_DELETE';
+    public const DELETE = 'ENSIGN_DELETE';
+    public const EDIT = 'ENSIGN_EDIT';
+    public const VIEW = 'ENSIGN_VIEW';
 
     public function __construct(private AccessDecisionManagerInterface $accessDecisionManager,) {}
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-
-        return in_array($attribute, [self::EDIT, self::VIEW])
-            && $subject instanceof \App\Entity\Statement;
+        return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
+            && $subject instanceof \App\Entity\Ensign;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool

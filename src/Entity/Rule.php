@@ -3,34 +3,73 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\RuleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RuleRepository::class)]
 #[ApiResource(
-    security: "is_granted('ROLE_USER')"
+    security: "is_granted('ROLE_USER')",
+    description: 'Marque des produits',
+    normalizationContext: ['groups' => ['read:Rules', 'read:Rule', 'read:Audit']],
+    denormalizationContext: ['groups' => ['write:Rule']],
+    operations: [
+        new Get(
+            securityMessage: 'Désolé, La règle ne peut pas être affichée.'
+        ),
+        new GetCollection(),
+        new Post(
+            securityMessage: 'Désolé, La règle peut pas être crée.'
+        ),
+        new Patch(
+            securityMessage: 'Désolé, La règle ne peut pas être modifiée.'
+        ),
+        new Delete(
+            security: "is_granted('ROLE_ADMIN')",
+            securityMessage: 'Désolé, La règle ne peut pas être suprimmée.'
+        )
+    ]
 )]
 class Rule extends Audit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:Rules'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotNull]
+    #[Assert\Length(
+        min: 3,
+        minMessage: 'Le libellé doit être supérieur à {{ limit }} charactères de long',
+    )]
+    #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
     private ?string $label = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotNull]
+    #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
     private ?string $price = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotNull]
+    #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
     private ?string $stock = null;
 
     #[ORM\ManyToOne(inversedBy: 'rules')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'rules')]
+    #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
     private ?Ensign $ensign = null;
 
     public function getId(): ?int

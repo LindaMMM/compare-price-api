@@ -16,15 +16,37 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Metadata\ApiFilter;
+use App\Controller\GetStatementController;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
     security: "is_granted('ROLE_USER')",
+    description: 'Produits recherché',
     normalizationContext: ['groups' => ['read:Products', 'read:Product']],
     denormalizationContext: ['groups' => ['write:Product']],
     forceEager: false,
     paginationMaximumItemsPerPage: 20,
-    paginationEnabled: true
+    paginationEnabled: true,
+    operations: [
+        new Get(
+            security: "is_granted('PRODUCT_VIEW', object)",
+            securityMessage: 'Désolé, Le produit ne peut pas être affichée.'
+        ),
+        new GetCollection(),
+        new Post(
+            security: "is_granted('PRODUCT_EDIT', object)",
+            securityMessage: 'Désolé, Le produit peut pas être crée.'
+        ),
+        new Patch(
+            security: "is_granted('PRODUCT_EDIT', object)",
+            securityMessage: 'Désolé, Le produit ne peut pas être modifiée.'
+        ),
+        new Delete(
+            security: "is_granted('PRODUCT_DELETE', object)",
+            securityMessage: 'Désolé, Le produit ne peut pas être suprimmée.'
+        ),
+        new Get(name: 'statements', uriTemplate: '/products/{id}/statements', controller: GetStatementController::class),
+    ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'nom' => 'partial'])]
 class Product extends Audit
@@ -68,6 +90,7 @@ class Product extends Audit
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
+    #[Groups(['read:Product', 'write:Product'])]
     private ?Brand $brand = null;
 
     /**
