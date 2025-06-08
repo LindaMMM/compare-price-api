@@ -9,7 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: StatementRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    security: "is_granted('ROLE_USER')",
+)]
 class Statement extends Audit
 {
     #[ORM\Id]

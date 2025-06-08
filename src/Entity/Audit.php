@@ -21,7 +21,7 @@ class Audit
 
     #[Groups(['read:Audit'])]
     #[Column(type: Types::STRING, name: 'USR_CRT')]
-    protected string $userCreate;
+    protected ?string $userCreate;
 
     #[Groups(['read:Audit'])]
     #[Column(type: Types::DATE_MUTABLE, name: 'DAT_UPD')]
@@ -29,7 +29,7 @@ class Audit
 
     #[Groups(['read:Audit'])]
     #[Column(type: Types::STRING, name: 'USR_UPD')]
-    protected string $userUpdate;
+    protected ?string $userUpdate;
 
     public function __construct() {}
 

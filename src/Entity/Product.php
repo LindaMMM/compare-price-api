@@ -19,6 +19,7 @@ use ApiPlatform\Metadata\ApiFilter;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
+    security: "is_granted('ROLE_USER')",
     normalizationContext: ['groups' => ['read:Products', 'read:Product']],
     denormalizationContext: ['groups' => ['write:Product']],
     forceEager: false,

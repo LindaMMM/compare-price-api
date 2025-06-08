@@ -28,7 +28,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
     security: 'is_granted("ROLE_USER")',
     operations: [
         new GetCollection(),
-        new Post(processor: UserPasswordHasher::class, validationContext: ['groups' => ['Default', 'user:create']]),
+        new Post(security: 'is_granted("ROLE_USER")', processor: UserPasswordHasher::class, validationContext: ['groups' => ['Default', 'user:create']]),
         new Get(),
         new Put(processor: UserPasswordHasher::class),
         new Patch(processor: UserPasswordHasher::class),

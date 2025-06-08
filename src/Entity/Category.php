@@ -3,22 +3,52 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Symfony\Action\NotFoundAction;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
+    description: 'Categorie des produits',
+    security: "is_granted('ROLE_USER')",
     normalizationContext: ['groups' => ['read:Category', 'read:Categories']],
     denormalizationContext: ['groups' => ['write:Category']],
-    paginationMaximumItemsPerPage: 20,
-    paginationEnabled: true
+    operations: [
+        new Get(
+            security: "is_granted('CATEGORY_VIEW', object)",
+            securityMessage: 'Désolé, La catégorie ne peut pas être affiché.'
+        ),
+        new GetCollection(),
+        new Post(
+            security: "is_granted('CATEGORY_EDIT', object)",
+            securityMessage: 'Désolé, La catégorie ne peut pas être créé.'
+        ),
+        new Patch(
+            security: "is_granted('CATEGORY_EDIT', object)",
+            securityMessage: 'Désolé, La catégorie ne peut pas être modifié.'
+        ),
+        new Delete(
+            security: "is_granted('CATEGORY_DELETE', object)",
+            securityMessage: 'Désolé, La catégorie ne peut pas être suprimmé.'
+        )
+    ]
+)]
+#[UniqueEntity(
+    fields: ['name'],
+    message: 'Ce nom existe déjà'
 )]
 class Category extends Audit
 {
@@ -29,7 +59,12 @@ class Category extends Audit
     private ?int $id = null;
 
     #[Groups(['read:Product', 'write:Product', 'read:Category', 'write:Category', 'read:Categoryies'])]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotNull]
+    #[Assert\Length(
+        min: 3,
+        minMessage: 'Le nom de la catégorie doit être supérieur à {{ limit }} charactères de long',
+    )]
     private ?string $name = null;
 
     /**
@@ -52,6 +87,7 @@ class Category extends Audit
 
     public function __construct()
     {
+        parent::__construct();
         $this->products = new ArrayCollection();
         $this->tasks = new ArrayCollection();
         $this->rules = new ArrayCollection();

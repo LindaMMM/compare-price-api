@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use ApiPlatform\OpenApi\Model\SecurityScheme;
 use ApiPlatform\OpenApi\Model\SecurityRequirement;
 
-#[AsDecorator('api_platform.openapi.factory')]
+
 class OpenApiFactory implements OpenApiFactoryInterface
 {
     private string $registerPath = "/auth/register";
@@ -32,6 +32,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
         $securitySchemes['JWT'] = new SecurityScheme(
             type: 'http',
             scheme: 'bearer',
+            bearerFormat: 'Token jwt',
         );
 
         /* $openApi

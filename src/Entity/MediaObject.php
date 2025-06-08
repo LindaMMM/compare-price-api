@@ -20,6 +20,7 @@ use App\Controller\MediaObjectController;
 #[Vich\Uploadable]
 #[ORM\Entity]
 #[ApiResource(
+    security: "is_granted('ROLE_USER')",
     normalizationContext: ['groups' => ['media:read']],
     operations: [
         new Get(),

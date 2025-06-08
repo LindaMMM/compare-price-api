@@ -32,7 +32,7 @@ class Brand extends Audit
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
-    #[Groups(['read:Brand', 'read:Brands', 'write:Brands'])]
+    #[Groups(['read:Brand', 'read:Brands', 'write:Brand'])]
     private ?string $name = null;
 
     /**

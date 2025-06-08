@@ -7,7 +7,9 @@ use App\Repository\RuleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RuleRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    security: "is_granted('ROLE_USER')"
+)]
 class Rule extends Audit
 {
     #[ORM\Id]

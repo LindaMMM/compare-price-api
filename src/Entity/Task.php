@@ -9,7 +9,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    security: "is_granted('ROLE_USER')",
+)]
 class Task extends Audit
 {
     #[ORM\Id]

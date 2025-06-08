@@ -10,7 +10,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EnsignRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    security: "is_granted('ROLE_USER')"
+)]
 class Ensign extends Audit
 {
     #[ORM\Id]
