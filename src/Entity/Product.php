@@ -53,7 +53,7 @@ class Product extends Audit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Product'])]
+    #[Groups(['read:Product', 'read:Statements', 'read:Statements'])]
     private ?int $id = null;
 
 

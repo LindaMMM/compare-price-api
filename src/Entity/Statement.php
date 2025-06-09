@@ -14,6 +14,7 @@ use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\OpenApi\Model;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Metadata\ApiFilter;
@@ -48,24 +49,70 @@ use App\Controller\GetLastStatementController;
             securityMessage: 'Désolé, la saisie ne peut pas être suprimmée.'
         ),
         new GetCollection(
-            name: 'products',
+            name: 'products_statement',
             uriTemplate: '/products/{productId}/statements',
             uriVariables: [
                 'productId' => new Link(fromClass: Product::class, toProperty: 'product'),
-            ]
+            ],
+
+            filters: [],
+            paginationEnabled: false,
+
+            openapi: new Model\Operation(
+                summary: 'Lecture des états',
+                parameters: [],
+                extensionProperties: [],
+                requestBody: new Model\RequestBody(
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [],
+                            'example' => []
+                        ]
+                    ])
+                )
+            ),
+
         ),
         new GetCollection(
             name: 'ensigns',
             uriTemplate: '/ensigns/{ensignId}/product_ensign_statements',
             uriVariables: [
                 'ensignId' => new Link(fromClass: Ensign::class, toProperty: 'ensign'),
-            ]
+            ],
+            filters: [],
+            paginationEnabled: false,
+            openapi: new Model\Operation(
+                summary: 'Lecture des états',
+                requestBody: new Model\RequestBody(
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [],
+                            'example' => []
+
+                        ]
+                    ])
+                )
+            ),
         ),
         new GetCollection(
             name: 'products',
             uriTemplate: '/products/{productId}/topstatements',
             controller: GetLastStatementController::class,
-            read: false
+
+            filters: [],
+            paginationEnabled: false,
+
+            openapi: new Model\Operation(
+                summary: 'Lecture des états',
+                requestBody: new Model\RequestBody(
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [],
+                            'example' => []
+                        ]
+                    ])
+                )
+            ),
 
         )
     ]

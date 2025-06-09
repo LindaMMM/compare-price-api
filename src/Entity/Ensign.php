@@ -53,7 +53,7 @@ class Ensign extends Audit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Ensign', 'write:Ensign', 'read:Ensigns'])]
+    #[Groups(['read:Ensign', 'write:Ensign', 'read:Ensigns', 'read:Statements', 'read:Statements'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50, unique: true)]
@@ -76,6 +76,10 @@ class Ensign extends Audit
      */
     #[ORM\OneToMany(targetEntity: Rule::class, mappedBy: 'ensign')]
     private Collection $rules;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:Ensign', 'write:Ensign', 'read:Ensigns'])]
+    private ?string $searchpattern = null;
 
 
     public function __construct()
@@ -139,6 +143,18 @@ class Ensign extends Audit
                 $rule->setEnsign(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSearchpattern(): ?string
+    {
+        return $this->searchpattern;
+    }
+
+    public function setSearchpattern(?string $searchpattern): static
+    {
+        $this->searchpattern = $searchpattern;
 
         return $this;
     }

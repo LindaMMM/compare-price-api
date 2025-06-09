@@ -63,6 +63,11 @@ class Rule extends Audit
     #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
     private ?string $stock = null;
 
+    #[ORM\Column(length: 255)]
+    #[Assert\NotNull]
+    #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
+    private ?string $start = null;
+
     #[ORM\ManyToOne(inversedBy: 'rules')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
@@ -116,6 +121,19 @@ class Rule extends Audit
 
         return $this;
     }
+
+    public function getStart(): ?string
+    {
+        return $this->start;
+    }
+
+    public function setStart(string $start): static
+    {
+        $this->start = $start;
+
+        return $this;
+    }
+
 
     public function getCategory(): ?Category
     {
