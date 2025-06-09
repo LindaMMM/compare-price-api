@@ -72,6 +72,10 @@ class Rule extends Audit
     #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
     private ?Ensign $ensign = null;
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
     public function getId(): ?int
     {
         return $this->id;

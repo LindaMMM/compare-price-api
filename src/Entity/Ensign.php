@@ -80,6 +80,7 @@ class Ensign extends Audit
 
     public function __construct()
     {
+        parent::__construct();
         $this->rules = new ArrayCollection();
     }
 

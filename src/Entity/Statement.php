@@ -13,11 +13,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
-
+use ApiPlatform\Metadata\Link;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\GetLastStatementController;
 
 #[ORM\Entity(repositoryClass: StatementRepository::class)]
 #[ApiResource(
@@ -45,6 +46,27 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
         new Delete(
             security: "is_granted('STATEMENT_DELETE', object)",
             securityMessage: 'Désolé, la saisie ne peut pas être suprimmée.'
+        ),
+        new GetCollection(
+            name: 'products',
+            uriTemplate: '/products/{productId}/statements',
+            uriVariables: [
+                'productId' => new Link(fromClass: Product::class, toProperty: 'product'),
+            ]
+        ),
+        new GetCollection(
+            name: 'ensigns',
+            uriTemplate: '/ensigns/{ensignId}/product_ensign_statements',
+            uriVariables: [
+                'ensignId' => new Link(fromClass: Ensign::class, toProperty: 'ensign'),
+            ]
+        ),
+        new GetCollection(
+            name: 'products',
+            uriTemplate: '/products/{productId}/topstatements',
+            controller: GetLastStatementController::class,
+            read: false
+
         )
     ]
 )]
@@ -68,6 +90,12 @@ class Statement extends Audit
     #[Assert\NotNull]
     private ?Product $product = null;
 
+    #[ORM\ManyToOne(targetEntity: Ensign::class)]
+    #[ORM\JoinColumn(name: 'ensign_id', referencedColumnName: 'id')]
+    #[Groups(['read:Statements', 'read:Statement', 'write:Statement'])]
+    #[Assert\NotNull]
+    private ?Ensign $ensign = null;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Groups(['read:Statements', 'read:Statement'])]
     private ?\DateTimeInterface $dateinput = null;
@@ -88,7 +116,6 @@ class Statement extends Audit
     #[Groups(['read:Statement', 'write:Statement'])]
     private ?string $label = null;
 
-
     public function getURL(): ?string
     {
         return $this->url;
@@ -101,7 +128,10 @@ class Statement extends Audit
         return $this;
     }
 
-    public function __construct() {}
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +150,17 @@ class Statement extends Audit
         return $this;
     }
 
+    public function getEnsign(): ?Ensign
+    {
+        return $this->ensign;
+    }
+
+    public function setEnsign(?Ensign $ensign): static
+    {
+        $this->ensign = $ensign;
+
+        return $this;
+    }
     public function getDateinput(): ?\DateTimeInterface
     {
         return $this->dateinput;
@@ -183,6 +224,10 @@ class Statement extends Audit
     #[ORM\PrePersist]
     public function setCreatedAtValue(PrePersistEventArgs $eventArgs): void
     {
+        parent::setCreatedAtValue($eventArgs);
         $this->dateinput = new \DateTime();
+        if (is_null($this->label)) {
+            $this->label = "Aucun commentaire";
+        }
     }
 }

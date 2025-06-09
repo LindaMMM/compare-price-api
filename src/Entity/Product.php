@@ -45,7 +45,6 @@ use App\Controller\GetStatementController;
             security: "is_granted('PRODUCT_DELETE', object)",
             securityMessage: 'Désolé, Le produit ne peut pas être suprimmée.'
         ),
-        new Get(name: 'statements', uriTemplate: '/products/{id}/statements', controller: GetStatementController::class),
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'nom' => 'partial'])]
@@ -101,6 +100,7 @@ class Product extends Audit
 
     public function __construct()
     {
+        parent::__construct();
         $this->statements = new ArrayCollection();
     }
 

@@ -71,6 +71,7 @@ class Task extends Audit
 
     public function __construct()
     {
+        parent::__construct();
         $this->category = new ArrayCollection();
     }
 

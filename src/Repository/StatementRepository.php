@@ -15,6 +15,32 @@ class StatementRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Statement::class);
     }
+    /**
+     * @return Statement[] Returns an array of Statement objects
+     */
+    public function getLast($idProduct): array
+    {
+
+        $qb = $this->createQueryBuilder('s');
+
+        $subQb = $this->createQueryBuilder('s2');
+        $subQb->select('MAX(s2.dateinput)')
+            ->where('s2.ensign = s.ensign')
+            ->andWhere('s2.product = :val');
+
+        $qb->select('s')
+            ->where(
+                $qb->expr()->eq(
+                    's.dateinput',
+                    '(' . $subQb->getDQL() . ')'
+                )
+            )->andWhere('s.product = :val')
+            ->setParameter('val', $idProduct);
+
+        $results = $qb->getQuery()->getResult();
+        return $results;
+    }
+
 
     //    /**
     //     * @return Statement[] Returns an array of Bank objects

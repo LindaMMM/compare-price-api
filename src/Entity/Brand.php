@@ -80,6 +80,7 @@ class Brand extends Audit
 
     public function __construct()
     {
+        parent::__construct();
         $this->products = new ArrayCollection();
     }
 
