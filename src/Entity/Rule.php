@@ -12,6 +12,8 @@ use App\Repository\RuleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: RuleRepository::class)]
 #[ApiResource(
@@ -36,6 +38,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         )
     ]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'ensign' => 'exact', 'category' => 'exact'])]
+
 class Rule extends Audit
 {
     #[ORM\Id]
@@ -67,6 +71,11 @@ class Rule extends Audit
     #[Assert\NotNull]
     #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
     private ?string $start = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotNull]
+    #[Groups(['read:Rules', 'read:Rule', 'write:Rule'])]
+    private ?string $url = null;
 
     #[ORM\ManyToOne(inversedBy: 'rules')]
     #[ORM\JoinColumn(nullable: false)]
@@ -133,7 +142,17 @@ class Rule extends Audit
 
         return $this;
     }
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
 
+    public function setUrl(string $url): static
+    {
+        $this->url = $url;
+
+        return $this;
+    }
 
     public function getCategory(): ?Category
     {

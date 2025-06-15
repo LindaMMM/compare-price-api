@@ -17,7 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
@@ -42,19 +43,20 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Delete(
             security: "is_granted('CATEGORY_DELETE', object)",
             securityMessage: 'Désolé, La catégorie ne peut pas être suprimmé.'
-        )
+        ),
     ]
 )]
 #[UniqueEntity(
     fields: ['name'],
     message: 'Ce nom existe déjà'
 )]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'tasks' => 'partial'])]
 class Category extends Audit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:Product', 'write:Product', 'read:Category', 'write:Category'])]
+    #[Groups(['read:Product', 'write:Product', 'read:Category', 'write:Category', 'read:Tasks'])]
     private ?int $id = null;
 
     #[Groups(['read:Product', 'write:Product', 'read:Category', 'write:Category', 'read:Categoryies'])]

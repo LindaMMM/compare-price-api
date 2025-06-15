@@ -98,22 +98,7 @@ use App\Controller\GetLastStatementController;
             name: 'products',
             uriTemplate: '/products/{productId}/topstatements',
             controller: GetLastStatementController::class,
-
-            filters: [],
-            paginationEnabled: false,
-
-            openapi: new Model\Operation(
-                summary: 'Lecture des états',
-                requestBody: new Model\RequestBody(
-                    content: new \ArrayObject([
-                        'application/json' => [
-                            'schema' => [],
-                            'example' => []
-                        ]
-                    ])
-                )
-            ),
-
+            read: false
         )
     ]
 )]

@@ -16,7 +16,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Metadata\ApiFilter;
-use App\Controller\GetStatementController;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\OpenApi\Model;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
@@ -45,6 +46,28 @@ use App\Controller\GetStatementController;
             security: "is_granted('PRODUCT_DELETE', object)",
             securityMessage: 'Désolé, Le produit ne peut pas être suprimmée.'
         ),
+        new GetCollection(
+            name: 'productsbycategory',
+            uriTemplate: '/categories/{categoryId}/products',
+            uriVariables: [
+                'categoryId' => new Link(fromClass: Category::class, toProperty: 'category'),
+            ],
+            filters: [],
+            paginationEnabled: false,
+            openapi: new Model\Operation(
+                summary: 'Lecture des produits',
+                requestBody: new Model\RequestBody(
+                    content: new \ArrayObject([
+                        'application/json' => [
+                            'schema' => [],
+                            'example' => []
+
+                        ]
+                    ])
+                )
+            ),
+
+        )
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'nom' => 'partial'])]

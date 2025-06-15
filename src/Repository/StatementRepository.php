@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Statement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @extends ServiceEntityRepository<Statement>
@@ -16,9 +18,9 @@ class StatementRepository extends ServiceEntityRepository
         parent::__construct($registry, Statement::class);
     }
     /**
-     * @return Statement[] Returns an array of Statement objects
+     * @return List<Statetment> Returns an array of Statement objects
      */
-    public function getLast($idProduct): array
+    public function getLast($idProduct): Collection
     {
 
         $qb = $this->createQueryBuilder('s');
@@ -37,8 +39,13 @@ class StatementRepository extends ServiceEntityRepository
             )->andWhere('s.product = :val')
             ->setParameter('val', $idProduct);
 
-        $results = $qb->getQuery()->getResult();
-        return $results;
+        $results = $qb->getQuery()->execute();
+        $collection = new ArrayCollection();
+        foreach ($results as $statement) {
+            $collection->add($statement);
+        }
+
+        return $collection;
     }
 
 

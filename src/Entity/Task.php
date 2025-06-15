@@ -66,7 +66,6 @@ class Task extends Audit
      * @var Collection<int, Categorie>
      */
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'tasks')]
-    #[Groups(['read:Task', 'write:Task'])]
     private Collection $category;
 
     public function __construct()
