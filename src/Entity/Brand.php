@@ -8,7 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-
+use ApiPlatform\Metadata\ApiProperty;
 use App\Repository\BrandRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,7 +22,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: BrandRepository::class)]
 #[ApiResource(
-    security: "is_granted('ROLE_USER')",
+
     description: 'Marque des produits',
     normalizationContext: ['groups' => ['read:Brands', 'read:Brand', 'read:Audit']],
     denormalizationContext: ['groups' => ['write:Brand']],
@@ -61,6 +61,7 @@ class Brand extends Audit
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['read:Brand'])]
+    #[ApiProperty(types: ['http://schema.org/identifier'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
@@ -70,6 +71,7 @@ class Brand extends Audit
         min: 3,
         minMessage: 'Le nom de la marque doit être supérieur à {{ limit }} charactères de long',
     )]
+    #[ApiProperty(types: ['http://schema.org/name'])]
     private ?string $name = null;
 
     /**

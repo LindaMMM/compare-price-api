@@ -20,6 +20,7 @@ use App\Controller\MediaObjectController;
 #[Vich\Uploadable]
 #[ORM\Entity]
 #[ApiResource(
+
     security: "is_granted('ROLE_USER')",
     normalizationContext: ['groups' => ['media:read']],
     operations: [
@@ -55,6 +56,7 @@ class MediaObject
 {
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     #[Groups(['media:read'])]
+    #[ApiProperty(types: ['http://schema.org/identifier'])]
     private ?int $id = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
@@ -78,12 +80,12 @@ class MediaObject
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    public function setName(string $Name): static
+    public function setTitle(string $Name): static
     {
         $this->title = $Name;
 

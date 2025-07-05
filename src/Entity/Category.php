@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Symfony\Action\NotFoundAction;
+use ApiPlatform\Metadata\ApiProperty;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,6 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
@@ -51,11 +53,16 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     message: 'Ce nom existe déjà'
 )]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'tasks' => 'partial'])]
+#[ApiFilter(OrderFilter::class, properties: [
+    'id' => 'ASC',
+    'name' => 'ASC'
+])]
 class Category extends Audit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[ApiProperty(types: ['http://schema.org/identifier'])]
     #[Groups(['read:Product', 'write:Product', 'read:Category', 'write:Category', 'read:Tasks'])]
     private ?int $id = null;
 
@@ -66,6 +73,7 @@ class Category extends Audit
         min: 3,
         minMessage: 'Le nom de la catégorie doit être supérieur à {{ limit }} charactères de long',
     )]
+    #[ApiProperty(types: ['http://schema.org/name'])]
     private ?string $name = null;
 
     /**

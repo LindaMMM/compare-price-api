@@ -26,7 +26,7 @@ final class MediaObjectController extends AbstractController
 
         $media = new MediaObject();
         $media->file = $uploadedFile;
-        $media->setName($request->get('title'));
+        $media->setTitle($request->get('title'));
 
         $em->persist($media);
         $em->flush();

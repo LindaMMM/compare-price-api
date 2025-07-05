@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\ApiProperty;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -70,7 +71,7 @@ use ApiPlatform\OpenApi\Model;
         )
     ]
 )]
-#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'nom' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'name' => 'partial'])]
 class Product extends Audit
 {
     #[ORM\Id]
@@ -87,8 +88,8 @@ class Product extends Audit
     /**
      * @var list<string> The word search
      */
-    #[Groups(['read:Product', 'write:Product'])]
     #[ORM\Column(type: 'json')]
+    #[Groups(['read:Product', 'read:Products', 'write:Product'])]
     private array $search = [];
 
 
@@ -159,7 +160,7 @@ class Product extends Audit
     /**
      * @param list<string> $search
      */
-    public function setSearchs(array $search): static
+    public function setSearch(array $search): static
     {
         $this->search = $search;
 
