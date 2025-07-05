@@ -9,8 +9,8 @@ nelmio_cors:
         "http://compare-price-api.test",
         "https://d605front.nitramlinda.fr",
         "https://www.d605front.nitramlinda.fr",
-        "https://www.apps.compare.nitramlinda.fr/",
-        "https://apps.compare.nitramlinda.fr/",
+        "https://www.apps.compare.nitramlinda.fr",
+        "https://apps.compare.nitramlinda.fr",
       ]
     allow_methods: ["GET", "OPTIONS", "POST", "PUT", "PATCH", "DELETE"]
     allow_headers: ["Content-Type", "Authorization"]
